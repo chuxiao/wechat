@@ -141,7 +141,9 @@ func (ak *WorkAccessToken) GetAccessToken() (accessToken string, err error) {
 // GetTokenFromServer 强制从微信服务器获取token
 func GetTokenFromServer(url string) (resAccessToken ResAccessToken, err error) {
 	var body []byte
-	body, err = util.HTTPGet(url)
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	body, err = util.HTTPGetContext(ctx, url)
 	if err != nil {
 		return
 	}
